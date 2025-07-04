@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM</title>
+</head>
+<body>
+  <p>Youtube Subscribe Button!</p>
+  <button class="js-button-element" onclick="handleSubscribe()">
+    Subscribe
+  </button>
+
+  <h4>Rock Paper Scissor</h4>
+  <button onclick="playGame('Rock')">Rock</button>
+  <button onclick="playGame('Paper')">Paper</button>
+  <button onclick="playGame('Scissor')">Scissor</button>
+  <button onclick="resetScore()">Reset Score</button>
+
+  <p class="js-result"></p>
+  <p class="js-move"></p>
+  <p class="js-score"></p>
+  
+
+  <script>
+    let score = JSON.parse(localStorage.getItem('score')) || {
+      win: 0,
+      lose: 0,
+      tie: 0
+    }
+
+    document.querySelector('.js-score').innerHTML = `Wins: ${score.win}, Losses: ${score.lose}, Ties: ${score.tie}`;
+    
+    function handleSubscribe() {
+      const buttonElement = document.querySelector(".js-button-element")
+
+      if(buttonElement.innerText == "Subscribe"){
+        buttonElement.innerHTML = "Subscribed"
+      } else {
+        buttonElement.innerHTML = "Subscribe"
+      }
+    }
+
+    function computerDecision() {
+      const computerProb = Math.random();
+      let computerMove = "";
+
+      if(computerProb >= 0 && computerProb < 1/3){
+        computerMove = "Rock"
+      } else if (computerProb >= 1/3 && computerProb < 2/3) {
+        computerMove = "Paper"
+      } else {
+        computerMove = "Scissor"
+      }
+
+      return computerMove;
+    }
+
+    function playGame(playerMove) {
+      let computerPick = computerDecision(); 
+      let result = "";
+
+      if(playerMove == 'Rock'){
+        if(computerPick == 'Rock'){
+          result = "Tie!"
+        } else if (computerPick == 'Paper'){
+          result = "You Lose!"
+        } else {
+          result = "You Won!"
+        }
+      } else if(playerMove == 'Paper'){
+        if(computerPick == 'Rock'){
+          result = "You Won!"
+        } else if (computerPick == 'Paper'){
+          result = "Tie!"
+        } else {
+          result = "You Lose!"
+        }
+      } else if(playerMove == 'Scissor'){
+        if(computerPick == 'Rock'){
+          result = "You Lose!"
+        } else if (computerPick == 'Paper'){
+          result = "You Won!"
+        } else {
+          result = "Tie!"
+        }
+      }
+
+      if(result == 'You Won!'){
+        score.win += 1
+      } else if(result == 'You Lose!'){
+        score.lose += 1
+      } else {
+        score.tie += 1
+      }
+
+      localStorage.setItem('score', JSON.stringify(score));
+
+      document.querySelector('.js-result').innerHTML = `${result}`
+      document.querySelector('.js-move').innerHTML = `Your Move: ${playerMove} and Enemy's Move: ${computerPick}`
+      document.querySelector('.js-score').innerHTML = `Wins: ${score.win}, Losses: ${score.lose}, Ties: ${score.tie}`;
+      
+    }
+
+    function resetScore() {
+      let score = {
+      win: 0,
+      lose: 0,
+      tie: 0
+    }
+
+    localStorage.removeItem('score')
+    document.querySelector('.js-score').innerHTML = `Wins: ${score.win}, Losses: ${score.lose}, Ties: ${score.tie}`;
+    }
+
+    
+  </script>
+  
+</body>
+</html>
